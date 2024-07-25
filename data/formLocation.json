@@ -86,7 +86,7 @@
     {
       "name": "geologist",
       "label": "Geologist",
-      "type": "text",
+      "type": "select",
       "placeholder": "Geologist",
       "required": true
     },
