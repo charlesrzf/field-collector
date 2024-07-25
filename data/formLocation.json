@@ -1,0 +1,101 @@
+[
+    {
+      "name": "proposedID",
+      "label": "Proposed ID",
+      "type": "number",
+      "placeholder": "Proposed ID",
+      "required": true
+    },
+    {
+      "name": "holeid",
+      "label": "Hole ID",
+      "type": "number",
+      "placeholder": "Hole ID",
+      "required": true
+    },
+    {
+      "name": "prospect",
+      "label": "Prospect",
+      "type": "select",
+      "placeholder": "Prospect",
+      "required": true
+    },
+    {
+      "name": "tenement",
+      "label": "Tenement",
+      "type": "select",
+      "placeholder": "Tenement",
+      "required": true
+    },
+    {
+      "name": "datum",
+      "label": "Datum",
+      "type": "select",
+      "placeholder": "Datum",
+      "required": true
+    },
+    {
+      "name": "surveyCoordinate",
+      "label": "Survey Coordinate",
+      "type": "select",
+      "placeholder": "Survey Coordinate",
+      "required": true
+    },
+    {
+      "name": "easting",
+      "label": "Easting",
+      "type": "number",
+      "placeholder": "Easting",
+      "required": true
+    },
+    {
+      "name": "northing",
+      "label": "Northing",
+      "type": "number",
+      "placeholder": "Northing",
+      "required": true
+    },
+    {
+      "name": "rl",
+      "label": "RL",
+      "type": "number",
+      "placeholder": "RL",
+      "required": true
+    },
+    {
+      "name": "depth",
+      "label": "Depth",
+      "type": "number",
+      "placeholder": "Depth",
+      "required": true
+    },
+    {
+      "name": "startdate",
+      "label": "Start Date",
+      "type": "date",
+      "placeholder": "Start Date",
+      "required": true
+    },
+    {
+      "name": "enddate",
+      "label": "End Date",
+      "type": "date",
+      "placeholder": "End Date",
+      "required": true
+    },
+    {
+      "name": "geologist",
+      "label": "Geologist",
+      "type": "text",
+      "placeholder": "Geologist",
+      "required": true
+    },
+    {
+      "name": "comments",
+      "label": "Comments",
+      "type": "text",
+      "placeholder": "Comments",
+      "required": true
+    }
+  ]
+  

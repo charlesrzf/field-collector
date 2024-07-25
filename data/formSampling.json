@@ -1,0 +1,59 @@
+[
+  {
+    "name": "sampleid",
+    "label": "Sample ID",
+    "type": "number",
+    "placeholder": "Sample ID",
+    "required": true
+  },
+  {
+    "name": "checkid",
+    "label": "Check ID",
+    "type": "number",
+    "placeholder": "Check ID",
+    "required": true
+  },
+  {
+    "name": "fromdepth",
+    "label": "From",
+    "type": "number",
+    "placeholder": "From",
+    "required": true
+  },
+  {
+    "name": "todepth",
+    "label": "To",
+    "type": "number",
+    "placeholder": "To",
+    "required": true
+  },
+  {
+    "name": "sampletype",
+    "label": "Sample Type",
+    "type": "select",
+    "placeholder": "Sample Type",
+    "required": true
+  },
+  {
+    "name": "category",
+    "label": "Category",
+    "type": "select",
+    "placeholder": "Category",
+    "required": true
+  },
+  {
+    "name": "weightkg",
+    "label": "Weight kg",
+    "type": "number",
+    "placeholder": "Weight kg",
+    "required": true
+  },
+  {
+    "name": "comments",
+    "label": "Comments",
+    "type": "text",
+    "placeholder": "Comments",
+    "required": true
+  }
+]
+  

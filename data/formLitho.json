@@ -1,0 +1,45 @@
+[
+    {
+      "name": "lithoid",
+      "label": "Litho ID",
+      "type": "number",
+      "placeholder": "Litho ID",
+      "required": true
+    },
+    {
+      "name": "fromdepth",
+      "label": "From",
+      "type": "number",
+      "placeholder": "From",
+      "required": true
+    },
+    {
+      "name": "todepth",
+      "label": "To",
+      "type": "number",
+      "placeholder": "To",
+      "required": true
+    },
+    {
+      "name": "regolith",
+      "label": "Regolith",
+      "type": "select",
+      "placeholder": "Regolith",
+      "required": true
+    },
+    {
+      "name": "lithocode",
+      "label": "Litho Code",
+      "type": "select",
+      "placeholder": "Litho Code",
+      "required": true
+    },
+    {
+      "name": "geodescription",
+      "label": "Geo Description",
+      "type": "text",
+      "placeholder": "Geo Description",
+      "required": true
+    }
+  ]
+  
