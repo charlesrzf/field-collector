@@ -5,12 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 
 interface SelectOptions {
   [key: string]: Array<{ label: string; value: string }>;
@@ -30,9 +31,8 @@ interface FormInput {
 
 const FormPage = () => {
   const { id } = useParams();
-  const router = useRouter();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [options, setOptions] = useState<SelectOptions>({});
   const [originalArrays, setOriginalArrays] = useState<OriginalArray>({});
   const [form, setForm] = useState<FormInput[]>([]);
@@ -197,7 +197,7 @@ const FormPage = () => {
 
         const responseJson = await response.json();
         toast.success(responseJson.mensagem);
-        router.push("/forms");
+        reset();
       } else {
         const existingUnsyncedData =
           JSON.parse(localStorage.getItem("unsyncedFormData") ?? "[]") || [];
@@ -215,6 +215,7 @@ const FormPage = () => {
         toast.info(
           "Você está offline. Os dados serão enviados assim que a conexão for restabelecida."
         );
+        reset();
       }
     } catch (error: any) {
       toast.error(`Erro ao enviar dados: ${error.message}`);
@@ -316,9 +317,17 @@ const FormPage = () => {
   return (
     <>
       <ToastContainer />
-      
+
       <div className="flex items-center p-4 gap-5 mb-5 bg-primary">
-        <Image src="/images/iubi.png" alt="license" width={80} height={80} />
+        <Link href="/forms">
+          <Image
+            src="/images/arrow-back.svg"
+            alt="back"
+            width={25}
+            height={25}
+            className="filter invert sepia saturate-0 hue-rotate-0 brightness-200 contrast-100"
+          />
+        </Link>
         <div>
           <Label className="text-sm font-bold text-primary-foreground">
             PREENCHER FORMULÁRIO

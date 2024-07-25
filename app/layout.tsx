@@ -6,7 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Soil Collector",
+  manifest: "/manifest.json",
+  title: "IUBI GE21",
   description: "Collect soil samples on field.",
 };
 
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-br">      
       <body className={cn(inter.className, "bg-zinc-200 text-zinc-900")}>
         {children}
       </body>
