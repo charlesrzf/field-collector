@@ -2,14 +2,21 @@
   {
     "name": "sampleid",
     "label": "Sample ID",
-    "type": "number",
+    "type": "text",
     "placeholder": "Sample ID",
+    "required": true
+  },
+  {
+    "name": "holeid",
+    "label": "Hole ID",
+    "type": "text",
+    "placeholder": "Hole ID",
     "required": true
   },
   {
     "name": "checkid",
     "label": "Check ID",
-    "type": "number",
+    "type": "text",
     "placeholder": "Check ID",
     "required": true
   },

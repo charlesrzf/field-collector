@@ -7,6 +7,13 @@
       "required": true
     },
     {
+      "name": "holeid",
+      "label": "Hole ID",
+      "type": "text",
+      "placeholder": "Hole ID",
+      "required": true
+    },
+    {
       "name": "fromdepth",
       "label": "From",
       "type": "number",
