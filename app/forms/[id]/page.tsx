@@ -124,7 +124,7 @@ const FormPage = () => {
     switch (id) {
       case "location": {
         return {
-          holeid: Text(data.holeid),
+          holeid: Number(data.holeid),
           prospect: originalArrays.prospect.find(
             (element) => element.id == data.prospect
           ),
@@ -149,9 +149,6 @@ const FormPage = () => {
       case "litho": {
         return {
           lithoid: Number(data.lithoid),
-          holeid: originalArrays.prospect.find(
-            (element) => element.id == data.holeid
-          ),
           fromdepth: Number(data.fromdepth),
           todepth: Number(data.todepth),
           regolith: originalArrays.regolith.find(
@@ -165,9 +162,6 @@ const FormPage = () => {
       }
       case "sampling": {
         return {
-          holeid: originalArrays.prospect.find(
-            (element) => element.id == data.holeid
-          ),
           sampleid: Number(data.sampleid),
           checkid: Number(data.checkid),
           fromdepth: Number(data.fromdepth),
