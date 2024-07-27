@@ -9,7 +9,7 @@
     {
       "name": "holeid",
       "label": "Hole ID",
-      "type": "text",
+      "type": "number",
       "placeholder": "Hole ID",
       "required": true
     },
