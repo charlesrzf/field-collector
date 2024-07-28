@@ -124,7 +124,7 @@ const FormPage = () => {
     switch (id) {
       case "location": {
         return {
-          holeid: Number(data.holeid),
+          holeid: data.holeid,
           prospect: originalArrays.prospect.find(
             (element) => element.id == data.prospect
           ),
