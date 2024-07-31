@@ -61,10 +61,15 @@ const FormPageUpdate = () => {
           setValue(key, dayjs(value as string).format("YYYY-MM-DD"));
         } else if (typeof value === "object" && value !== null) {
           if (key === "surveycoordinate") {
-            setValue("surveyCoordinate", value.id);
+            if ('id' in value) { // Verifica se 'id' existe em value
+              setValue("surveyCoordinate", value.id);
+            }
           } else {
-            setValue(key, value.id);
+            if ('id' in value) { // Verifica se 'id' existe em value
+              setValue(key, value.id);
+            }
           }
+        
         } else {
           setValue(key, value);
         }
