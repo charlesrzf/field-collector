@@ -79,7 +79,7 @@ export default function FormsPage() {
     <>
       <ToastContainer />
 
-      <div className="flex items-center p-4 gap-5 mb-5 bg-primary">
+      <div className="flex items-center p-4 gap-5 mb-1 bg-primary">
         <Image src="/images/iubi.png" alt="license" width={80} height={80} />
         <Label className="text-xl font-bold text-primary-foreground">
           INSERIR DADOS

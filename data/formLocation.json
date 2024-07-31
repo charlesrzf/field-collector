@@ -1,12 +1,5 @@
 [
     {
-      "name": "proposedID",
-      "label": "Proposed ID",
-      "type": "number",
-      "placeholder": "Proposed ID",
-      "required": true
-    },
-    {
       "name": "holeid",
       "label": "Hole ID",
       "type": "text",
@@ -39,6 +32,20 @@
       "label": "Survey Coordinate",
       "type": "select",
       "placeholder": "Survey Coordinate",
+      "required": true
+    },
+    {
+      "name": "latitude",
+      "label": "Latitude",
+      "type": "number",
+      "placeholder": "Latitude",
+      "required": true
+    },
+    {
+      "name": "longitude",
+      "label": "Longitude",
+      "type": "number",
+      "placeholder": "Longitude",
       "required": true
     },
     {

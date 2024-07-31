@@ -32,45 +32,11 @@ interface FormInput {
 const FormPageUpdate = () => {
   const { id, formid } = useParams();
 
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const [options, setOptions] = useState<SelectOptions>({});
   const [originalArrays, setOriginalArrays] = useState<OriginalArray>({});
   const [form, setForm] = useState<FormInput[]>([]);
   const [formId, setFormId] = useState<number>();
-  const [userLocation, setUserLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-
-  const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-
-          setUserLocation({ latitude, longitude });
-        },
-        (error) => {
-          if (error.code === error.PERMISSION_DENIED) {
-            toast.error("Permissão de localização negada.");
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            toast.error("Informação de localização não disponível.");
-          } else if (error.code === error.TIMEOUT) {
-            toast.error("Tempo de solicitação de localização expirou.");
-          } else {
-            toast.error("Erro desconhecido ao obter localização.");
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
-    } else {
-      toast.error("Geolocalização não é suportada por este navegador.");
-    }
-  };
 
   const fetchForm = async (formid: string) => {
     try {
@@ -112,8 +78,6 @@ const FormPageUpdate = () => {
 
   useEffect(() => {
     if (formid) fetchForm(formid.toString());
-
-    getUserLocation();
   }, [formid]);
 
   useEffect(() => {
@@ -227,8 +191,8 @@ const FormPageUpdate = () => {
           startdate: dayjs(data.startdate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           enddate: dayjs(data.enddate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           comments: data.comments,
-          latitude: userLocation?.latitude,
-          longitude: userLocation?.longitude,
+          latitude: data?.latitude,
+          longitude: data?.longitude,
         };
       }
       case "litho": {
@@ -244,6 +208,9 @@ const FormPageUpdate = () => {
             (element) => element.id == data.lithocode
           ),
           geodescription: data.geodescription,
+          location: originalArrays.location.find(
+            (element) => element.id == data.location
+          ),
         };
       }
       case "sampling": {
@@ -261,6 +228,9 @@ const FormPageUpdate = () => {
           ),
           weightkg: Number(data.weightkg),
           comments: data.comments,
+          location: originalArrays.location.find(
+            (element) => element.id == data.location
+          ),
         };
       }
     }
@@ -282,9 +252,7 @@ const FormPageUpdate = () => {
           throw new Error(`Response status: ${response.status}`);
         }
 
-        const responseJson = await response.json();
-        toast.success(responseJson.mensagem);
-        reset();
+        toast.success("Atualizado com sucesso!");
       } else {
         const existingUnsyncedData =
           JSON.parse(localStorage.getItem("unsyncedFormData") ?? "[]") || [];
@@ -303,7 +271,6 @@ const FormPageUpdate = () => {
         toast.info(
           "Você está offline. Os dados serão enviados assim que a conexão for restabelecida."
         );
-        reset();
       }
     } catch (error: any) {
       toast.error(`Erro ao enviar dados: ${error.message}`);
@@ -337,9 +304,7 @@ const FormPageUpdate = () => {
             if (response.ok) {
               unsyncedData.splice(i, 1);
               i--;
-              toast.success(
-                `Dados do formulário ${id} enviados com sucesso.`
-              );
+              toast.success(`Dados do formulário ${id} enviados com sucesso.`);
             } else {
               console.error(
                 `Erro ao enviar dados para ${id}: ${response.statusText}`
@@ -377,15 +342,20 @@ const FormPageUpdate = () => {
       const array =
         json[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
 
-      const transformedArray = array.map((item: any) => ({
-        label:
-          item.name ||
-          item.tenement ||
-          item.description ||
-          item.surveycoordinate ||
+      const transformedArray = array.map((item: any) => {
+        const properties = [
+          item.holeid,
+          item.name,
+          item.tenement,
+          item.description,
+          item.surveycoordinate,
           item.datum,
-        value: item.id,
-      }));
+        ];
+
+        const label = properties.find((prop) => typeof prop === "string") ?? "";
+
+        return { label, value: item.id };
+      });
 
       return { transformedArray, originalArray: array };
     } catch (error: any) {
@@ -412,7 +382,7 @@ const FormPageUpdate = () => {
     <>
       <ToastContainer />
 
-      <div className="flex items-center p-4 gap-5 mb-5 bg-primary">
+      <div className="flex items-center p-4 gap-5 mb-1 bg-primary">
         <Link href={`/forms/${id}`}>
           <Image
             src="/images/arrow-back.svg"

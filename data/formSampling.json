@@ -7,6 +7,13 @@
     "required": true
   },
   {
+    "name": "location",
+    "label": "Location",
+    "type": "select",
+    "placeholder": "Location",
+    "required": true
+  },
+  {
     "name": "checkid",
     "label": "Check ID",
     "type": "number",

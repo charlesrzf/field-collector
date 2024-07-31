@@ -32,7 +32,7 @@ interface FormInput {
 const FormPageCreate = () => {
   const { id } = useParams();
 
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, setValue } = useForm();
   const [options, setOptions] = useState<SelectOptions>({});
   const [originalArrays, setOriginalArrays] = useState<OriginalArray>({});
   const [form, setForm] = useState<FormInput[]>([]);
@@ -40,6 +40,7 @@ const FormPageCreate = () => {
   useEffect(() => {
     const formType = id;
     setForm(getFormById(formType as string));
+    getUserLocation()
   }, [id]);
 
   useEffect(() => {
@@ -120,6 +121,37 @@ const FormPageCreate = () => {
     fetchData();
   }, [form, id]);
 
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+
+          setValue("latitude", latitude);
+          setValue("longitude", longitude);
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            toast.error("Permissão de localização negada.");
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            toast.error("Informação de localização não disponível.");
+          } else if (error.code === error.TIMEOUT) {
+            toast.error("Tempo de solicitação de localização expirou.");
+          } else {
+            toast.error("Erro desconhecido ao obter localização.");
+          }
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        }
+      );
+    } else {
+      toast.error("Geolocalização não é suportada por este navegador.");
+    }
+  };
+
   const getFormBody = (data: any) => {
     switch (id) {
       case "location": {
@@ -144,6 +176,8 @@ const FormPageCreate = () => {
           startdate: dayjs(data.startdate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           enddate: dayjs(data.enddate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           comments: data.comments,
+          latitude: data?.latitude,
+          longitude: data?.longitude,
         };
       }
       case "litho": {
@@ -158,6 +192,9 @@ const FormPageCreate = () => {
             (element) => element.id == data.lithocode
           ),
           geodescription: data.geodescription,
+          location: originalArrays.location.find(
+            (element) => element.id == data.location
+          ),
         };
       }
       case "sampling": {
@@ -174,6 +211,9 @@ const FormPageCreate = () => {
           ),
           weightkg: Number(data.weightkg),
           comments: data.comments,
+          location: originalArrays.location.find(
+            (element) => element.id == data.location
+          ),
         };
       }
     }
@@ -287,15 +327,20 @@ const FormPageCreate = () => {
       const array =
         json[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
 
-      const transformedArray = array.map((item: any) => ({
-        label:
-          item.name ||
-          item.tenement ||
-          item.description ||
-          item.surveycoordinate ||
+      const transformedArray = array.map((item: any) => {
+        const properties = [
+          item.holeid,
+          item.name,
+          item.tenement,
+          item.description,
+          item.surveycoordinate,
           item.datum,
-        value: item.id,
-      }));
+        ];
+
+        const label = properties.find((prop) => typeof prop === "string") ?? "";
+
+        return { label, value: item.id };
+      });
 
       return { transformedArray, originalArray: array };
     } catch (error: any) {
@@ -322,7 +367,7 @@ const FormPageCreate = () => {
     <>
       <ToastContainer />
 
-      <div className="flex items-center p-4 gap-5 mb-5 bg-primary">
+      <div className="flex items-center p-4 gap-5 mb-1 bg-primary">
         <Link href={`/forms/${id}`}>
           <Image
             src="/images/arrow-back.svg"
