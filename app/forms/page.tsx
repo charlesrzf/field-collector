@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function FormsPage() {
   const forms = [
@@ -30,14 +31,19 @@ export default function FormsPage() {
       );
 
       if (unsyncedData.length > 0) {
-
         for (let i = 0; i < unsyncedData.length; i++) {
-          const { id: formId, data } = unsyncedData[i];
-          const url = `https://bbx.ge21gt.cloud/bbx/${formId}/`;
+          const { id, formId, data } = unsyncedData[i];
+          let url = "";
+
+          if (formId) {
+            url = `https://bbx.ge21gt.cloud/bbx/${id}/${formId}`;
+          } else {
+            url = `https://bbx.ge21gt.cloud/bbx/${id}/`;
+          }
 
           try {
             const response = await fetch(url, {
-              method: "POST",
+              method: formId ? "PUT" : "POST",
               body: JSON.stringify(data),
               headers: { "Content-Type": "application/json" },
             });
@@ -45,17 +51,15 @@ export default function FormsPage() {
             if (response.ok) {
               unsyncedData.splice(i, 1);
               i--;
-              toast.success(
-                `Dados do formulário ${formId} enviados com sucesso.`
-              );
+              toast.success(`Dados do formulário ${id} enviados com sucesso.`);
             } else {
               console.error(
-                `Erro ao enviar dados para ${formId}: ${response.statusText}`
+                `Erro ao enviar dados para ${id}: ${response.statusText}`
               );
             }
           } catch (error: any) {
             console.error(
-              `Erro ao tentar enviar dados para ${formId}: ${error.message}`
+              `Erro ao tentar enviar dados para ${id}: ${error.message}`
             );
           }
         }
