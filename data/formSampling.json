@@ -31,6 +31,7 @@
     "name": "fromdepth",
     "label": "From",
     "type": "number",
+    "step": "0.01",
     "placeholder": "From",
     "required": true
   },
@@ -38,6 +39,7 @@
     "name": "todepth",
     "label": "To",
     "type": "number",
+    "step": "0.01",
     "placeholder": "To",
     "required": true
   },
