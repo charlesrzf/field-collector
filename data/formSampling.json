@@ -1,5 +1,12 @@
 [
   {
+    "name": "location",
+    "label": "Hole ID",
+    "type": "select",
+    "placeholder": "Hole ID",
+    "required": true
+  },
+  {
     "name": "sampleid",
     "label": "Sample ID",
     "type": "number",
@@ -7,10 +14,10 @@
     "required": true
   },
   {
-    "name": "location",
-    "label": "Location",
-    "type": "select",
-    "placeholder": "Location",
+    "name": "batch",
+    "label": "Batch",
+    "type": "text",
+    "placeholder": "Batch",
     "required": true
   },
   {
@@ -53,6 +60,13 @@
     "label": "Weight kg",
     "type": "number",
     "placeholder": "Weight kg",
+    "required": true
+  },
+  {
+    "name": "seal",
+    "label": "Seal",
+    "type": "text",
+    "placeholder": "Seal",
     "required": true
   },
   {

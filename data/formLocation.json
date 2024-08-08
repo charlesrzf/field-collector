@@ -1,5 +1,12 @@
 [
     {
+      "name": "proposedid",
+      "label": "Proposed ID",
+      "type": "text",
+      "placeholder": "Proposed ID",
+      "required": true
+    },
+    {
       "name": "holeid",
       "label": "Hole ID",
       "type": "text",
@@ -35,20 +42,6 @@
       "required": true
     },
     {
-      "name": "latitude",
-      "label": "Latitude",
-      "type": "number",
-      "placeholder": "Latitude",
-      "required": true
-    },
-    {
-      "name": "longitude",
-      "label": "Longitude",
-      "type": "number",
-      "placeholder": "Longitude",
-      "required": true
-    },
-    {
       "name": "easting",
       "label": "Easting",
       "type": "number",
@@ -70,10 +63,38 @@
       "required": true
     },
     {
+      "name": "diameter",
+      "label": "Diameter",
+      "type": "number",
+      "placeholder": "Diameter",
+      "required": true
+    },
+    {
       "name": "depth",
       "label": "Depth",
       "type": "number",
       "placeholder": "Depth",
+      "required": true
+    },
+    {
+      "name": "watertable",
+      "label": "Water Table",
+      "type": "text",
+      "placeholder": "Water Table",
+      "required": true
+    },
+    {
+      "name": "team",
+      "label": "Team",
+      "type": "select",
+      "placeholder": "Team",
+      "required": true
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "type": "select",
+      "placeholder": "Status",
       "required": true
     },
     {

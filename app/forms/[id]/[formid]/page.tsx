@@ -61,15 +61,10 @@ const FormPageUpdate = () => {
           setValue(key, dayjs(value as string).format("YYYY-MM-DD"));
         } else if (typeof value === "object" && value !== null) {
           if (key === "surveycoordinate") {
-            if ('id' in value) { // Verifica se 'id' existe em value
-              setValue("surveyCoordinate", value.id);
-            }
+            setValue("surveyCoordinate", value.id);
           } else {
-            if ('id' in value) { // Verifica se 'id' existe em value
-              setValue(key, value.id);
-            }
+            setValue(key, value.id);
           }
-        
         } else {
           setValue(key, value);
         }
@@ -173,6 +168,7 @@ const FormPageUpdate = () => {
       case "location": {
         return {
           id: formId,
+          proposedid: Number(data.proposedid),
           holeid: data.holeid,
           prospect: originalArrays.prospect.find(
             (element) => element.id == data.prospect
@@ -192,12 +188,14 @@ const FormPageUpdate = () => {
           easting: Number(data.easting),
           northing: Number(data.northing),
           rl: Number(data.rl),
+          diameter: Number(data.diameter),          
           depth: Number(data.depth),
+          watertable: data.diameter,
+          team: data.team,
+          status: data.status,
           startdate: dayjs(data.startdate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           enddate: dayjs(data.enddate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           comments: data.comments,
-          latitude: data?.latitude,
-          longitude: data?.longitude,
         };
       }
       case "litho": {

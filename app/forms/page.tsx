@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function FormsPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<any>();
+
   const forms = [
     {
       title: "Location",
@@ -23,6 +27,11 @@ export default function FormsPage() {
       id: "sampling",
     },
   ];
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    setUser(JSON.parse(storedUser ?? "[]"));
+  }, []);
 
   useEffect(() => {
     const syncDataOnReconnect = async () => {
@@ -75,15 +84,37 @@ export default function FormsPage() {
     };
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem("user");
+    router.push("/");
+  };
+
   return (
     <>
       <ToastContainer />
 
       <div className="flex items-center p-4 gap-5 mb-1 bg-primary">
         <Image src="/images/iubi.png" alt="license" width={80} height={80} />
-        <Label className="text-xl font-bold text-primary-foreground">
-          INSERIR DADOS
-        </Label>
+        {user?.nome && (
+          <div className="flex items-center justify-between w-full">
+            <div>
+              <Label className="text-sm font-bold text-primary-foreground">
+                Bem vindo,
+              </Label>
+              <p className="text-xl text-primary-foreground font-bold uppercase">
+                {user?.nome}
+              </p>
+            </div>
+            <button onClick={() => logout()}>
+              <Image
+                src="/images/logout.png"
+                alt="license"
+                width={30}
+                height={30}
+              />
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col p-4 gap-3">

@@ -37,11 +37,29 @@ const FormPageCreate = () => {
   const [originalArrays, setOriginalArrays] = useState<OriginalArray>({});
   const [form, setForm] = useState<FormInput[]>([]);
 
+  const teamOptions = [
+    { label: "1", value: "1" },
+    { label: "2", value: "2" },
+    { label: "3", value: "3" },
+    { label: "4", value: "4" },
+  ];
+
+  const statusOptions = [
+    { label: "Concluded", value: "concluded" },
+    { label: "In Progress", value: "in_progress" },
+    { label: "Programmed", value: "programmed" },
+  ];
+
   useEffect(() => {
     const formType = id;
     setForm(getFormById(formType as string));
-    getUserLocation()
   }, [id]);
+
+  useEffect(() => {
+    if (!form) return;
+
+    setValue("diameter", 3);
+  }, [form]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,41 +139,11 @@ const FormPageCreate = () => {
     fetchData();
   }, [form, id]);
 
-  const getUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-
-          setValue("latitude", latitude);
-          setValue("longitude", longitude);
-        },
-        (error) => {
-          if (error.code === error.PERMISSION_DENIED) {
-            toast.error("Permissão de localização negada.");
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            toast.error("Informação de localização não disponível.");
-          } else if (error.code === error.TIMEOUT) {
-            toast.error("Tempo de solicitação de localização expirou.");
-          } else {
-            toast.error("Erro desconhecido ao obter localização.");
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
-    } else {
-      toast.error("Geolocalização não é suportada por este navegador.");
-    }
-  };
-
   const getFormBody = (data: any) => {
     switch (id) {
       case "location": {
         return {
+          proposedid: Number(data.proposedid),
           holeid: Number(data.holeid),
           prospect: originalArrays.prospect.find(
             (element) => element.id == data.prospect
@@ -169,15 +157,20 @@ const FormPageCreate = () => {
           surveycoordinate: originalArrays.surveyCoordinate.find(
             (element) => element.id == data.surveyCoordinate
           ),
+          geologist: originalArrays.geologist.find(
+            (element) => element.id == data.geologist
+          ),
           easting: Number(data.easting),
           northing: Number(data.northing),
           rl: Number(data.rl),
+          diameter: Number(data.diameter),          
           depth: Number(data.depth),
+          watertable: data.diameter,
+          team: data.team,
+          status: data.status,
           startdate: dayjs(data.startdate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           enddate: dayjs(data.enddate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
           comments: data.comments,
-          latitude: data?.latitude,
-          longitude: data?.longitude,
         };
       }
       case "litho": {
@@ -398,7 +391,13 @@ const FormPageCreate = () => {
             </Label>
             {input?.type === "select" ? (
               <Select
-                options={options[input.name] || []}
+                options={
+                  input.name === "status"
+                    ? statusOptions
+                    : input.name === "team"
+                    ? teamOptions
+                    : options[input.name] || []
+                }
                 {...register(input.name)}
               />
             ) : (
@@ -406,6 +405,7 @@ const FormPageCreate = () => {
                 {...register(input.name)}
                 id={input?.name}
                 type={input?.type}
+                step="0.01"
                 placeholder={input?.placeholder}
                 required={input?.required}
                 inputMode={input?.type === "number" ? "numeric" : "text"}

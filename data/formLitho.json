@@ -1,16 +1,9 @@
 [
     {
-      "name": "lithoid",
-      "label": "Litho ID",
-      "type": "number",
-      "placeholder": "Litho ID",
-      "required": true
-    },
-    {
       "name": "location",
-      "label": "Location",
+      "label": "Hole ID",
       "type": "select",
-      "placeholder": "Location",
+      "placeholder": "Hole ID",
       "required": true
     },
     {
@@ -28,25 +21,32 @@
       "required": true
     },
     {
+      "name": "date",
+      "label": "Date",
+      "type": "date",
+      "placeholder": "Date",
+      "required": true
+    },
+    {
       "name": "regolith",
       "label": "Regolith",
       "type": "select",
       "placeholder": "Regolith",
-      "required": true
+      "required": false
     },
     {
       "name": "lithocode",
       "label": "Litho Code",
       "type": "select",
       "placeholder": "Litho Code",
-      "required": true
+      "required": false
     },
     {
       "name": "geodescription",
       "label": "Geo Description",
       "type": "text",
       "placeholder": "Geo Description",
-      "required": true
+      "required": false
     }
   ]
   
