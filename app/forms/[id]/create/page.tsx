@@ -57,9 +57,11 @@ const FormPageCreate = () => {
 
   useEffect(() => {
     if (!form) return;
-
     setValue("diameter", 3);
-  }, [form]);
+    if (options) {
+      setValue("surveyCoordinate", "2");
+    }
+  }, [form, options]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,7 +165,7 @@ const FormPageCreate = () => {
           easting: Number(data.easting),
           northing: Number(data.northing),
           rl: Number(data.rl),
-          diameter: Number(data.diameter),          
+          diameter: Number(data.diameter),
           depth: Number(data.depth),
           watertable: data.diameter,
           team: data.team,
@@ -325,6 +327,7 @@ const FormPageCreate = () => {
           item.holeid,
           item.name,
           item.tenement,
+          item.code,
           item.description,
           item.surveycoordinate,
           item.datum,

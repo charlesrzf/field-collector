@@ -34,8 +34,14 @@ export function LoginForm() {
       }
 
       const responseJson = await response.json();
-      localStorage.setItem("user", JSON.stringify(responseJson));
-      router.push("/forms");
+
+      if (responseJson.estaLogado) {
+        localStorage.setItem("user", JSON.stringify(responseJson));
+        router.push("/forms");
+        return
+      }
+
+      toast.error('Credenciais inválidas!');
     } catch (error: any) {
       toast.error(`Algo deu errado! ${error.message}`);
       reset();

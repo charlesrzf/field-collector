@@ -61,13 +61,9 @@ const FormPageUpdate = () => {
           setValue(key, dayjs(value as string).format("YYYY-MM-DD"));
         } else if (typeof value === "object" && value !== null) {
           if (key === "surveycoordinate") {
-            if ('id' in value) {
-              setValue("surveyCoordinate", value.id);
-            }
+            setValue("surveyCoordinate", (value as any).id);
           } else {
-            if ('id' in value) {
-              setValue(key, value.id);
-            }
+            setValue(key, (value as any).id);
           }
         } else {
           setValue(key, value);
@@ -354,6 +350,7 @@ const FormPageUpdate = () => {
           item.holeid,
           item.name,
           item.tenement,
+          item.code,
           item.description,
           item.surveycoordinate,
           item.datum,
@@ -428,6 +425,7 @@ const FormPageUpdate = () => {
                 {...register(input.name)}
                 id={input?.name}
                 type={input?.type}
+                step="0.01"
                 placeholder={input?.placeholder}
                 required={input?.required}
                 inputMode={input?.type === "number" ? "numeric" : "text"}
