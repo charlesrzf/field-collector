@@ -219,7 +219,7 @@ const FormPageUpdate = () => {
       case "sampling": {
         return {
           id: formId,
-          sampleid: Number(data.sampleid),
+          sampleid: data.sampleid,
           checkid: Number(data.checkid),
           fromdepth: Number(data.fromdepth),
           todepth: Number(data.todepth),
