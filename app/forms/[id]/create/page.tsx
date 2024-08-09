@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
+import api from "@/services/api";
 
 interface SelectOptions {
   [key: string]: Array<{ label: string; value: string }>;
@@ -167,7 +168,7 @@ const FormPageCreate = () => {
           rl: Number(data.rl),
           diameter: Number(data.diameter),
           depth: Number(data.depth),
-          watertable: data.diameter,
+          waterTable: data.waterTable,
           team: data.team,
           status: data.status,
           startdate: dayjs(data.startdate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
@@ -194,7 +195,7 @@ const FormPageCreate = () => {
       }
       case "sampling": {
         return {
-          sampleid: Number(data.sampleid),
+          sampleid: data.sampleid,
           checkid: Number(data.checkid),
           fromdepth: Number(data.fromdepth),
           todepth: Number(data.todepth),
@@ -217,21 +218,10 @@ const FormPageCreate = () => {
   const onSubmit = async (data: any) => {
     try {
       const dataSend = getFormBody(data);
-      const url = `https://bbx.ge21gt.cloud/bbx/${id}/`;
 
       if (navigator.onLine) {
-        const response = await fetch(url, {
-          method: "POST",
-          body: JSON.stringify(dataSend),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-
-        const responseJson = await response.json();
-        toast.success(responseJson.mensagem);
+        const response = await api.post(`${id}/`, dataSend);
+        toast.success(response.mensagem);
         reset();
       } else {
         const existingUnsyncedData =
@@ -266,30 +256,15 @@ const FormPageCreate = () => {
       if (unsyncedData.length > 0) {
         for (let i = 0; i < unsyncedData.length; i++) {
           const { id, formId, data } = unsyncedData[i];
-          let url = "";
-
-          if (formId) {
-            url = `https://bbx.ge21gt.cloud/bbx/${id}/${formId}`;
-          } else {
-            url = `https://bbx.ge21gt.cloud/bbx/${id}/`;
-          }
 
           try {
-            const response = await fetch(url, {
-              method: formId ? "PUT" : "POST",
-              body: JSON.stringify(data),
-              headers: { "Content-Type": "application/json" },
-            });
+            formId
+              ? await api.put(`${id}/${formId}/`, data)
+              : await api.put(`${id}/`, data);
 
-            if (response.ok) {
-              unsyncedData.splice(i, 1);
-              i--;
-              toast.success(`Dados do formulário ${id} enviados com sucesso.`);
-            } else {
-              console.error(
-                `Erro ao enviar dados para ${id}: ${response.statusText}`
-              );
-            }
+            unsyncedData.splice(i, 1);
+            i--;
+            toast.success(`Dados do formulário ${id} enviados com sucesso.`);
           } catch (error: any) {
             console.error(
               `Erro ao tentar enviar dados para ${id}: ${error.message}`
@@ -310,17 +285,9 @@ const FormPageCreate = () => {
 
   const fetchSelectOptions = async (name: string) => {
     try {
-      const url = `https://bbx.ge21gt.cloud/bbx/${name.toLowerCase()}/`;
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-
-      const json = await response.json();
+      const response = await api.get(`${name.toLowerCase()}/`);
       const array =
-        json[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
+        response[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
 
       const transformedArray = array.map((item: any) => {
         const properties = [

@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import api from "@/services/api";
 
 const FormPage = () => {
   const { id } = useParams();
@@ -13,16 +14,8 @@ const FormPage = () => {
 
   const fetchList = async (name: string) => {
     try {
-      const url = `https://bbx.ge21gt.cloud/bbx/${name.toLowerCase()}/`;
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-
-      const json = await response.json();
-      const list = json[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
+      const response = await api.get(`${name.toLowerCase()}/`);
+      const list = response[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
       setData(list);
     } catch (error: any) {
       console.error(error.message);

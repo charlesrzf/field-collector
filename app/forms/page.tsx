@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import api from "@/services/api";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,30 +43,15 @@ export default function FormsPage() {
       if (unsyncedData.length > 0) {
         for (let i = 0; i < unsyncedData.length; i++) {
           const { id, formId, data } = unsyncedData[i];
-          let url = "";
-
-          if (formId) {
-            url = `https://bbx.ge21gt.cloud/bbx/${id}/${formId}`;
-          } else {
-            url = `https://bbx.ge21gt.cloud/bbx/${id}/`;
-          }
 
           try {
-            const response = await fetch(url, {
-              method: formId ? "PUT" : "POST",
-              body: JSON.stringify(data),
-              headers: { "Content-Type": "application/json" },
-            });
+            formId
+              ? await api.put(`${id}/${formId}/`, data)
+              : await api.post(`${id}/`, data);
 
-            if (response.ok) {
-              unsyncedData.splice(i, 1);
-              i--;
-              toast.success(`Dados do formulário ${id} enviados com sucesso.`);
-            } else {
-              console.error(
-                `Erro ao enviar dados para ${id}: ${response.statusText}`
-              );
-            }
+            unsyncedData.splice(i, 1);
+            i--;
+            toast.success(`Dados do formulário ${id} enviados com sucesso.`);
           } catch (error: any) {
             console.error(
               `Erro ao tentar enviar dados para ${id}: ${error.message}`
@@ -87,6 +73,31 @@ export default function FormsPage() {
   const logout = () => {
     localStorage.removeItem("user");
     router.push("/");
+  };
+
+  const handleExport = async () => {
+    try {
+      const response = await api.get("arquivos/gerarcsv/", {
+        headers: {
+          Accept: "application/zip",
+        },
+        responseType: "arraybuffer",
+      });
+
+      const blob = new Blob([response], { type: "application/zip" });
+
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "arquivos.zip";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erro ao baixar o arquivo:", error);
+    }
   };
 
   return (
@@ -130,6 +141,14 @@ export default function FormsPage() {
             </Link>
           </Button>
         ))}
+
+        <Button
+          size="lg"
+          className="w-full uppercase mt-5"
+          onClick={() => handleExport()}
+        >
+          Exportar
+        </Button>
       </div>
     </>
   );

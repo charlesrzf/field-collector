@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
+import api from "@/services/api";
 
 interface SelectOptions {
   [key: string]: Array<{ label: string; value: string }>;
@@ -38,19 +39,25 @@ const FormPageUpdate = () => {
   const [form, setForm] = useState<FormInput[]>([]);
   const [formId, setFormId] = useState<number>();
 
+  const teamOptions = [
+    { label: "1", value: "1" },
+    { label: "2", value: "2" },
+    { label: "3", value: "3" },
+    { label: "4", value: "4" },
+  ];
+
+  const statusOptions = [
+    { label: "Concluded", value: "concluded" },
+    { label: "In Progress", value: "in_progress" },
+    { label: "Programmed", value: "programmed" },
+  ];
+
   const fetchForm = async (formid: string) => {
     try {
-      const url = `https://bbx.ge21gt.cloud/bbx/${id}/pesquisar/${formid}/`;
+      const response = await api.get(`${id}/pesquisar/${formid}/`);
 
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-
-      const json = await response.json();
       const list =
-        json[
+        response[
           `lista${
             id.toString().charAt(0).toUpperCase() + id.toString().slice(1)
           }`
@@ -188,9 +195,9 @@ const FormPageUpdate = () => {
           easting: Number(data.easting),
           northing: Number(data.northing),
           rl: Number(data.rl),
-          diameter: Number(data.diameter),          
+          diameter: Number(data.diameter),
           depth: Number(data.depth),
-          watertable: data.diameter,
+          waterTable: data.waterTable,
           team: data.team,
           status: data.status,
           startdate: dayjs(data.startdate).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
@@ -242,19 +249,9 @@ const FormPageUpdate = () => {
   const onSubmit = async (data: any) => {
     try {
       const dataSend = getFormBody(data);
-      const url = `https://bbx.ge21gt.cloud/bbx/${id}/${formId}`;
 
       if (navigator.onLine) {
-        const response = await fetch(url, {
-          method: "PUT",
-          body: JSON.stringify(dataSend),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-
+        await api.put(`${id}/${formId}/`, dataSend);
         toast.success("Atualizado com sucesso!");
       } else {
         const existingUnsyncedData =
@@ -289,30 +286,15 @@ const FormPageUpdate = () => {
       if (unsyncedData.length > 0) {
         for (let i = 0; i < unsyncedData.length; i++) {
           const { id, formId, data } = unsyncedData[i];
-          let url = "";
-
-          if (formId) {
-            url = `https://bbx.ge21gt.cloud/bbx/${id}/${formId}`;
-          } else {
-            url = `https://bbx.ge21gt.cloud/bbx/${id}/`;
-          }
 
           try {
-            const response = await fetch(url, {
-              method: formId ? "PUT" : "POST",
-              body: JSON.stringify(data),
-              headers: { "Content-Type": "application/json" },
-            });
+            formId
+              ? await api.put(`${id}/${formId}/`, data)
+              : await api.post(`${id}/`, data);
 
-            if (response.ok) {
-              unsyncedData.splice(i, 1);
-              i--;
-              toast.success(`Dados do formulário ${id} enviados com sucesso.`);
-            } else {
-              console.error(
-                `Erro ao enviar dados para ${id}: ${response.statusText}`
-              );
-            }
+            unsyncedData.splice(i, 1);
+            i--;
+            toast.success(`Dados do formulário ${id} enviados com sucesso.`);
           } catch (error: any) {
             console.error(
               `Erro ao tentar enviar dados para ${id}: ${error.message}`
@@ -333,17 +315,9 @@ const FormPageUpdate = () => {
 
   const fetchSelectOptions = async (name: string) => {
     try {
-      const url = `https://bbx.ge21gt.cloud/bbx/${name.toLowerCase()}/`;
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-
-      const json = await response.json();
+      const response = await api.get(`${name.toLowerCase()}/`);
       const array =
-        json[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
+        response[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
 
       const transformedArray = array.map((item: any) => {
         const properties = [
@@ -417,7 +391,13 @@ const FormPageUpdate = () => {
             </Label>
             {input?.type === "select" ? (
               <Select
-                options={options[input.name] || []}
+                options={
+                  input.name === "status"
+                    ? statusOptions
+                    : input.name === "team"
+                    ? teamOptions
+                    : options[input.name] || []
+                }
                 {...register(input.name)}
               />
             ) : (

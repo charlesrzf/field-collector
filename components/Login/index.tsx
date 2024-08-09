@@ -14,6 +14,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import api from "@/services/api";
 
 export function LoginForm() {
   const router = useRouter();
@@ -21,27 +22,15 @@ export function LoginForm() {
 
   const onSubmit = async (data: any) => {
     try {
-      const url = "https://bbx.ge21gt.cloud/bbx/login/";
+      const response = await api.post("login/", data);
 
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-
-      const responseJson = await response.json();
-
-      if (responseJson.estaLogado) {
-        localStorage.setItem("user", JSON.stringify(responseJson));
+      if (response.estaLogado) {
+        localStorage.setItem("user", JSON.stringify(response));
         router.push("/forms");
-        return
+        return;
       }
 
-      toast.error('Credenciais inválidas!');
+      toast.error("Credenciais inválidas!");
     } catch (error: any) {
       toast.error(`Algo deu errado! ${error.message}`);
       reset();

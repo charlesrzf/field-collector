@@ -77,7 +77,7 @@
       "required": true
     },
     {
-      "name": "watertable",
+      "name": "waterTable",
       "label": "Water Table",
       "type": "text",
       "placeholder": "Water Table",
