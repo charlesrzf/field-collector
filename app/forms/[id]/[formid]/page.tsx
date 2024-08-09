@@ -175,7 +175,7 @@ const FormPageUpdate = () => {
       case "location": {
         return {
           id: formId,
-          proposedid: Number(data.proposedid),
+          proposedid: data.proposedid,
           holeid: data.holeid,
           prospect: originalArrays.prospect.find(
             (element) => element.id == data.prospect
