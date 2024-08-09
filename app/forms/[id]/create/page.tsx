@@ -291,6 +291,7 @@ const FormPageCreate = () => {
 
       const transformedArray = array.map((item: any) => {
         const properties = [
+          item.proposedid,
           item.holeid,
           item.name,
           item.tenement,
