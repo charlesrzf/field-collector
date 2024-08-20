@@ -226,6 +226,7 @@ const FormPageUpdate = () => {
         return {
           id: formId,
           sampleid: data.sampleid,
+          batch: data.batch,
           checkid: Number(data.checkid),
           fromdepth: Number(data.fromdepth),
           todepth: Number(data.todepth),
@@ -235,7 +236,9 @@ const FormPageUpdate = () => {
           category: originalArrays.category.find(
             (element) => element.id == data.category
           ),
+          duplicatereference: data.duplicatereference,
           weightkg: Number(data.weightkg),
+          seal: data.seal,
           comments: data.comments,
           location: originalArrays.location.find(
             (element) => element.id == data.location

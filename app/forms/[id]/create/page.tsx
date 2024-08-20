@@ -34,7 +34,7 @@ const FormPageCreate = () => {
   const { id } = useParams();
 
   const { register, handleSubmit, reset, setValue, watch } = useForm();
-  const category = watch("category")
+  const category = watch("category");
   const [options, setOptions] = useState<SelectOptions>({});
   const [originalArrays, setOriginalArrays] = useState<OriginalArray>({});
   const [form, setForm] = useState<FormInput[]>([]);
@@ -196,6 +196,7 @@ const FormPageCreate = () => {
       case "sampling": {
         return {
           sampleid: data.sampleid,
+          batch: data.batch,
           checkid: Number(data.checkid),
           fromdepth: Number(data.fromdepth),
           todepth: Number(data.todepth),
@@ -205,7 +206,9 @@ const FormPageCreate = () => {
           category: originalArrays.category.find(
             (element) => element.id == data.category
           ),
+          duplicatereference: data.duplicatereference,
           weightkg: Number(data.weightkg),
+          seal: data.seal,
           comments: data.comments,
           location: originalArrays.location.find(
             (element) => element.id == data.location
@@ -361,13 +364,14 @@ const FormPageCreate = () => {
             </Label>
             {input?.type === "select" ? (
               <Select
-                options={
-                  input.name === "status"
+                options={[
+                  { value: "", label: "Selecione..." },
+                  ...(input.name === "status"
                     ? statusOptions
                     : input.name === "team"
                     ? teamOptions
-                    : options[input.name] || []
-                }
+                    : options[input.name] || []),
+                ]}
                 {...register(input.name)}
               />
             ) : (
@@ -377,7 +381,10 @@ const FormPageCreate = () => {
                 type={input?.type}
                 step="0.01"
                 placeholder={input?.placeholder}
-                required={input?.required || (input.name === "duplicatereference" && category == 10)}
+                required={
+                  input?.required ||
+                  (input.name === "duplicatereference" && category == 10)
+                }
                 inputMode={input?.type === "number" ? "numeric" : "text"}
                 style={{ minWidth: "calc(100% - 1rem)" }}
               />

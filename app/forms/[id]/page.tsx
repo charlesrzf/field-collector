@@ -75,14 +75,18 @@ const FormPage = () => {
             <Link
               className="w-full"
               href={
-                id == "litho"
+                id == "litho" && !locationId
                   ? `/forms/${id}?locationId=${item.id}`
                   : `/forms/${id}/${
                       item.holeid || item.lithoid || item.sampleid
                     }`
               }
             >
-              {item.holeid || item.lithoid || item.sampleid}
+              {locationId
+                ? `${item.fromdepth} - ${item.todepth} ${
+                    item.lithocode ? "- " + item.lithocode.description : ""
+                  }`
+                : item.holeid || item.lithoid || item.sampleid}
             </Link>
           </Button>
         ))}
