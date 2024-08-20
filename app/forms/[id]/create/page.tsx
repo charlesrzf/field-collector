@@ -33,7 +33,8 @@ interface FormInput {
 const FormPageCreate = () => {
   const { id } = useParams();
 
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, watch } = useForm();
+  const category = watch("category")
   const [options, setOptions] = useState<SelectOptions>({});
   const [originalArrays, setOriginalArrays] = useState<OriginalArray>({});
   const [form, setForm] = useState<FormInput[]>([]);
@@ -178,7 +179,6 @@ const FormPageCreate = () => {
       }
       case "litho": {
         return {
-          lithoid: Number(data.lithoid),
           fromdepth: Number(data.fromdepth),
           todepth: Number(data.todepth),
           regolith: originalArrays.regolith.find(
@@ -377,7 +377,7 @@ const FormPageCreate = () => {
                 type={input?.type}
                 step="0.01"
                 placeholder={input?.placeholder}
-                required={input?.required}
+                required={input?.required || (input.name === "duplicatereference" && category == 10)}
                 inputMode={input?.type === "number" ? "numeric" : "text"}
                 style={{ minWidth: "calc(100% - 1rem)" }}
               />

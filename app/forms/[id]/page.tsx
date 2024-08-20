@@ -2,7 +2,7 @@
 
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,19 @@ import api from "@/services/api";
 
 const FormPage = () => {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const locationId = Number(searchParams.get("locationId"));
   const [data, setData] = useState<any[]>([]);
 
   const fetchList = async (name: string) => {
     try {
-      const response = await api.get(`${name.toLowerCase()}/`);
-      const list = response[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
+      let url = `${name.toLowerCase()}/`;
+      if (locationId)
+        url = `${name.toLowerCase()}/pesquisar-location/${locationId}`;
+
+      const response = await api.get(url);
+      const list =
+        response[`lista${name.charAt(0).toUpperCase() + name.slice(1)}`];
       setData(list);
     } catch (error: any) {
       console.error(error.message);
@@ -23,14 +30,15 @@ const FormPage = () => {
   };
 
   useEffect(() => {
-    if (id) fetchList(id.toString());
-  }, [id]);
+    if (id)
+      fetchList(id == "litho" && !locationId ? "location" : id.toString());
+  }, [id, locationId]);
 
   return (
     <>
       <div className="flex justify-between items-center bg-primary p-4">
         <div className="flex items-center gap-5">
-          <Link href="/forms">
+          <Link href={locationId ? "/forms/litho" : "/forms"}>
             <Image
               src="/images/arrow-back.svg"
               alt="back"
@@ -66,9 +74,13 @@ const FormPage = () => {
           >
             <Link
               className="w-full"
-              href={`/forms/${id}/${
-                item.holeid || item.lithoid || item.sampleid
-              }`}
+              href={
+                id == "litho"
+                  ? `/forms/${id}?locationId=${item.id}`
+                  : `/forms/${id}/${
+                      item.holeid || item.lithoid || item.sampleid
+                    }`
+              }
             >
               {item.holeid || item.lithoid || item.sampleid}
             </Link>

@@ -77,7 +77,7 @@ export default function FormsPage() {
 
   const handleExport = async () => {
     try {
-      const response = await api.get("arquivos/gerarcsv/", {
+      const response = await api.get(`arquivos/gerarcsv/${user?.roles.includes("ge21") ? 1 : 0}`, {
         headers: {
           Accept: "application/zip",
         },
@@ -142,13 +142,15 @@ export default function FormsPage() {
           </Button>
         ))}
 
-        <Button
-          size="lg"
-          className="w-full uppercase mt-5"
-          onClick={() => handleExport()}
-        >
-          Exportar
-        </Button>
+        {(user?.roles.includes("admin") || user?.roles.includes("ge21")) && (
+          <Button
+            size="lg"
+            className="w-full uppercase mt-5"
+            onClick={() => handleExport()}
+          >
+            Exportar
+          </Button>
+        )}
       </div>
     </>
   );

@@ -208,7 +208,6 @@ const FormPageUpdate = () => {
       case "litho": {
         return {
           id: formId,
-          lithoid: Number(data.lithoid),
           fromdepth: Number(data.fromdepth),
           todepth: Number(data.todepth),
           regolith: originalArrays.regolith.find(
