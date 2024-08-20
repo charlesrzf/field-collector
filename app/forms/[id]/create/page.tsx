@@ -146,8 +146,8 @@ const FormPageCreate = () => {
     switch (id) {
       case "location": {
         return {
-          proposedid: data.proposedid,
-          holeid: data.holeid,
+          proposedid: Number(data.proposedid),
+          holeid: Number(data.holeid),
           prospect: originalArrays.prospect.find(
             (element) => element.id == data.prospect
           ),
@@ -291,7 +291,6 @@ const FormPageCreate = () => {
 
       const transformedArray = array.map((item: any) => {
         const properties = [
-          item.proposedid,
           item.holeid,
           item.name,
           item.tenement,
