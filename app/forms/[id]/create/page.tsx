@@ -147,8 +147,8 @@ const FormPageCreate = () => {
     switch (id) {
       case "location": {
         return {
-          proposedid: Number(data.proposedid),
-          holeid: Number(data.holeid),
+          proposedid: data.proposedid,
+          holeid: data.holeid,
           prospect: originalArrays.prospect.find(
             (element) => element.id == data.prospect
           ),
